@@ -6,7 +6,7 @@ jobs:
   build:
     strategy:
       matrix:
-        label: [actuated, actuated-aarch64]
+        label: [actuated-aarch64]
     runs-on: ${{ matrix.label }}
     steps:
       - uses: actions/checkout@v3
@@ -17,21 +17,22 @@ jobs:
       #     name: welteki
       #     authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
       #     skipPush: true
-      - name: Build faasd 🔧
-        run: |
-          nix build -L .#faasd
-          # nix eval --json .#faasd | jq -r | cachix push welteki
-      - name: Build containerd 🔧
-        run: |
-          nix build -L .#faasd-containerd
-          # nix eval --json .#faasd-containerd | jq -r | cachix push welteki
-      - name: Build cni-plugin 🔧
-        run: |
-          nix build -L .#faasd-cni-plugins
-          # nix eval --json .#faasd-cni-plugins | jq -r | cachix push welteki
-      - name: Build OpenFaaS core images 🔧
-        run: |
-          nix build .#gateway-image \
-            .#queue-worker-image \
-            .#nats-image \
-            .#prometheus-image
+      - uses: self-actuated/connect-ssh@master
+      # - name: Build faasd 🔧
+      #   run: |
+      #     nix build -L .#faasd
+      #     # nix eval --json .#faasd | jq -r | cachix push welteki
+      # - name: Build containerd 🔧
+      #   run: |
+      #     nix build -L .#faasd-containerd
+      #     # nix eval --json .#faasd-containerd | jq -r | cachix push welteki
+      # - name: Build cni-plugin 🔧
+      #   run: |
+      #     nix build -L .#faasd-cni-plugins
+      #     # nix eval --json .#faasd-cni-plugins | jq -r | cachix push welteki
+      # - name: Build OpenFaaS core images 🔧
+      #   run: |
+      #     nix build .#gateway-image \
+      #       .#queue-worker-image \
+      #       .#nats-image \
+      #       .#prometheus-image
